@@ -9,6 +9,13 @@ Name hosts as required:
 
 ## Install k8s on each node to be used for k8s
 
+### Ubuntu
+Ensure `curl` is available
+```bash
+apt-get update
+apt-get install -y apt-transport-https curl
+```
+
 Add repo key
 ```bash
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -22,7 +29,37 @@ sudo apt update
 
 Install k8s
 ```bash
-sudo apt install -y docker.io kubelet kubeadm kubernetes-cni
+sudo apt install -y docker.io # install docker container runtine
+sudo apt install -y kubelet kubeadm kubernetes-cni # install k8s components
+```
+
+### CentOS
+
+```bash
+sudo cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+exclude=kube*
+EOF
+```
+
+Set SELinux in permissive mode (effectively disabling it). This is required to allow containers to access the host filesystem.
+```bash
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+```
+
+```bash
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+```
+
+```bash
+systemctl enable --now kubelet
 ```
 
 ## Setup k8s
