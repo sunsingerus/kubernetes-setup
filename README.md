@@ -7,7 +7,7 @@ Name hosts as required:
 /etc/hosts kub1
 ```
 
-## Install k8s
+## Install k8s on each node to be used for k8s
 
 Add repo key
 ```bash
@@ -38,26 +38,44 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 sudo reboot
 ```
 
-==================
-Setup k8s
+## Setup k8s
 
-RUN ON MASTER NODE
-
+On a Master node:
+```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+```
 
 COPY AND SAVE 'join command'
 
 COPY k8s config to your local:
+```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
 
 
 SETUP MASTER NODE and all the other
+
+```text
+[mark-control-plane] Marking the node kubeadm-master as control-plane by adding the label "node-role.kubernetes.io/master=''"
+[mark-control-plane] Marking the node kubeadm-master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+```
+
+List taints on nodes
+```bash
+kubectl get nodes -o json | jq .items[].spec
+```
+
+By default, your cluster will not schedule pods on the master
+
 kubectl taint nodes --all node-role.kubernetes.io/master-
 kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
-SETUP NETWORKING
+
+### Setup Networking
+```bash
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+```
 
 
 ON NON-MASTER NODES JOIN THEM INTO CLUSTER
