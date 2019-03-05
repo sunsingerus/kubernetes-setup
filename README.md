@@ -1,4 +1,4 @@
-# Task: Setup Kebernetes
+# Task: Setup Kubernetes
 
 ## Change hostname OPTIONAL
 We may want to name kubernetes hosts in order to tell them apart from other nodes. In this case, on each k8s node we may want to:
