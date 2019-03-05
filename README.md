@@ -1,19 +1,23 @@
 # Task: Setup Kebernetes
 
-## Change hostname
-Name hosts as required:
+## Change hostname OPTIONAL
+We may want to name kubernetes hosts in order to tell them apart from other nodes. In this case, on each k8s node we may want to:
 ```bash
-/etc/hostname kub1
-/etc/hosts kub1
+sudo vim /etc/hostname
 ```
+Set hostname, ex: `kub1`
+```bash
+sudo vim /etc/hosts
+```
+Set DNS name, ex: `kub1`
 
 ## Install k8s on each node to be used for k8s
 
 ### Ubuntu
 Ensure `curl` is available
 ```bash
-apt-get update
-apt-get install -y apt-transport-https curl
+sudo apt-get update
+sudo apt-get install -y apt-transport-https curl
 ```
 
 Add repo key
@@ -23,7 +27,7 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 
 Add k8s repo
 ```bash
-sudo echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
+sudo bash -c "echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' >> /etc/apt/sources.list.d/kubernetes.list"
 sudo apt update
 ```
 
@@ -63,10 +67,16 @@ systemctl enable --now kubelet
 ```
 
 ## Setup k8s
+Kubernetes requires to have swap turned off, so let's specify this
 ```bash
-sudo echo "swapoff -a" >> /etc/rc.local
+sudo vim /etc/rc.local
+```
+Insert into `rc.local`
+```bash
+swapoff -a
 ```
 
+Insert `kubectl` autocomplete script - very useful feature, just press `tab` while editing `kubectl` command and see what autocomplete can do.
 ```bash
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
@@ -77,14 +87,38 @@ sudo reboot
 
 ## Setup k8s
 
-On a Master node:
+On a Master node init kubernetes cluster:
 ```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
+This command may take a while to complete. In case of success, we'll see something like:
 
-COPY AND SAVE 'join command'
+```text
+Your Kubernetes master has initialized successfully!
 
-COPY k8s config to your local:
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join 192.168.74.149:6443 --token gonf7n.0w7x9huih0gbqcsj --discovery-token-ca-cert-hash sha256:3871b941076a8b6524bfb5407a4e6315a2663bbdb908986a8e982805b7b82f37
+
+```
+
+**Copy and save** 'join command'
+```bash
+sudo kubeadm join 192.168.74.149:6443 --token gonf7n.0w7x9huih0gbqcsj --discovery-token-ca-cert-hash sha256:3871b941076a8b6524bfb5407a4e6315a2663bbdb908986a8e982805b7b82f37
+```
+
+Copy k8s config file from `/etc/kubernetes/admin.conf` to your local `$HOME/.kube` folder. This can be done with SSH in case you'd like to access k8s cluster from other machine:
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -94,28 +128,81 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 SETUP MASTER NODE and all the other
 
+Note the following lines reported by `kubeadm init` command:
 ```text
 [mark-control-plane] Marking the node kubeadm-master as control-plane by adding the label "node-role.kubernetes.io/master=''"
 [mark-control-plane] Marking the node kubeadm-master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
 ```
+This means that `master` node has label `node-role.kubernetes.io/master=''` and taint `node-role.kubernetes.io/master:NoSchedule`.
+With such a taint master node will not run any pods. So, in case we'd like to have pods running on all nodes of k8s cluster - including master - we need to clear this taint.
 
-List taints on nodes
+List taints on nodes in JSON form
 ```bash
 kubectl get nodes -o json | jq .items[].spec
 ```
+```json
+{
+  "podCIDR": "10.244.0.0/24",
+  "taints": [
+    {
+      "effect": "NoSchedule",
+      "key": "node-role.kubernetes.io/master"
+    },
+    {
+      "effect": "NoSchedule",
+      "key": "node.kubernetes.io/not-ready"
+    }
+  ]
+}
 
-By default, your cluster will not schedule pods on the master
+```
+In yaml form
+```bash
+kubectl get nodes -o yaml
+```
+and see
+```yaml
+    labels:
+      beta.kubernetes.io/arch: amd64
+      beta.kubernetes.io/os: linux
+      kubernetes.io/hostname: kub1
+      node-role.kubernetes.io/master: ""
 
+```
+```yaml
+    taints:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+```
+
+
+By default, your cluster will not schedule pods on the master.
+Clear taint with:
+
+```bash
 kubectl taint nodes --all node-role.kubernetes.io/master-
+```
+
+Assign `cluster-admin` to `kube-system:default` account
+```bash
 kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+```
 
 ### Setup Networking
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
+It'll take some time so setup networking and after several minutes we'll have k8s cluster of one node ready:
 
+```bash
+kubectl get node
+```
+```text
+NAME   STATUS   ROLES    AGE   VERSION
+kub1   Ready    master   16m   v1.13.4
+```
 
-ON NON-MASTER NODES JOIN THEM INTO CLUSTER
+Now we can setup k8s on other nodes and joint them into k8s cluster with `join` command, saved earlier
 sudo kubeadm join 192.168.74.149:6443 --token ugzi1b.e87yd5ha2yr4viil --discovery-token-ca-cert-hash sha256:ba34bc044b87db492896ab9e357cbd8f4280cb185ef0c9b11233b0ccece480a7
 
 FETCH TOKEN IN CASE OLD IS BAD
