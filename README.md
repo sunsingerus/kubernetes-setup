@@ -125,9 +125,6 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-
-SETUP MASTER NODE and all the other
-
 Note the following lines reported by `kubeadm init` command:
 ```text
 [mark-control-plane] Marking the node kubeadm-master as control-plane by adding the label "node-role.kubernetes.io/master=''"
@@ -202,12 +199,36 @@ NAME   STATUS   ROLES    AGE   VERSION
 kub1   Ready    master   16m   v1.13.4
 ```
 
-Now we can setup k8s on other nodes and joint them into k8s cluster with `join` command, saved earlier
-sudo kubeadm join 192.168.74.149:6443 --token ugzi1b.e87yd5ha2yr4viil --discovery-token-ca-cert-hash sha256:ba34bc044b87db492896ab9e357cbd8f4280cb185ef0c9b11233b0ccece480a7
+## Join node into existing k8s cluster
+Now we can setup k8s on other nodes.
 
+Join node into k8s cluster with `join` command, saved earlier
+```bash
+sudo kubeadm join 192.168.74.149:6443 --token gonf7n.0w7x9huih0gbqcsj --discovery-token-ca-cert-hash sha256:3871b941076a8b6524bfb5407a4e6315a2663bbdb908986a8e982805b7b82f37
+```
+We should see something like:
+```text
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+```
 FETCH TOKEN IN CASE OLD IS BAD
 sudo kubeadm token create
 
+```bash
+kubectl get node
+```
+```text
+NAME   STATUS     ROLES    AGE   VERSION
+kub1   Ready      master   56m   v1.13.4
+kub2   NotReady   <none>   31s   v1.13.4
+```
+Give it some time to setup
+```text
+NAME   STATUS   ROLES    AGE   VERSION
+kub1   Ready    master   56m   v1.13.4
+kub2   Ready    <none>   70s   v1.13.4
+```
 
 # Dashboard
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
