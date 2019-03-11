@@ -1,5 +1,7 @@
 # Task: Setup Kubernetes
 
+# kubeadm
+
 ## Change hostname OPTIONAL
 We may want to name kubernetes hosts in order to tell them apart from other nodes. In this case, on each k8s node we may want to:
 ```bash
@@ -251,4 +253,53 @@ probably reboot
 
 # Join new node to cluster with JOIN command as `sudo kubeadm join `
 
+# KOPS
+
+Download `kops`
+```bash
+wget https://github.com/kubernetes/kops/releases/download/1.10.0/kops-linux-amd64
+chmod +x kops-linux-amd64
+mv kops-linux-amd64 ~/bin/kops
+```
+
+
+We can keep cluster state either locally or in S3 storage. It is importnant to setup S3 permissions to control access to the bucket.
+Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. Specify this bucket as kops store:
+```bash
+export KOPS_STATE_STORE=s3://altinity-kops-state-store
+```
+and then kops will use this location by default
+
+Specify and export `AWS_PROFILE` env var which references section in `~/.aws/credentials` file with `aws_access_key_id` and `aws_secret_access_key`
+```ini
+[altinity]
+aws_access_key_id = XXX
+aws_secret_access_key = YYY
+```
+
+```bash
+kops create cluster --zones=us-east-1a dev.altinity.k8s.local
+```
+list clusters with
+```bash
+kops get cluster
+```
+edit cluster:
+```bash
+kops edit cluster dev.altinity.k8s.local
+```
+edit node instance group: 
+```bash
+kops edit ig --name=dev.altinity.k8s.local nodes
+```
+
+edit your master instance group:
+```bash
+kops edit ig --name=dev.altinity.k8s.local master-us-east-1a
+```
+
+Configure cluster with:
+```bash
+kops update cluster dev.altinity.k8s.local --yes
+```
 
