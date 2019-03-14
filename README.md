@@ -303,3 +303,9 @@ Configure cluster with:
 kops update cluster dev.altinity.k8s.local --yes
 ```
 
+## Delete cluster
+
+```bash
+kops delete cluster dev.altinity.k8s.local --yes
+```
+
