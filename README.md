@@ -147,7 +147,13 @@ as root:
 
 ```
 
-And we would like to fetch `config` file into `~/.kube/config` on master node, so it can easily be propagated further to users:
+**Copy and save** 'join command'
+```bash
+sudo kubeadm join 192.168.74.149:6443 --token gonf7n.0w7x9huih0gbqcsj --discovery-token-ca-cert-hash sha256:3871b941076a8b6524bfb5407a4e6315a2663bbdb908986a8e982805b7b82f37
+```
+
+And we would like to fetch `config` file from `/etc/kubernetes/admin.conf` to your local `$HOME/.kube` folder on master node, so it can easily be propagated further to users.
+Copy k8s config file  This can be done with SSH in case you'd like to access k8s cluster from other machine:
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -157,18 +163,6 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 After that, you can easily get `config` from master node with `scp` as:
 ```bash
 scp <MASTER_NODE>:/home/<USER>/.kube/config ~/.kube/config
-```
-
-**Copy and save** 'join command'
-```bash
-sudo kubeadm join 192.168.74.149:6443 --token gonf7n.0w7x9huih0gbqcsj --discovery-token-ca-cert-hash sha256:3871b941076a8b6524bfb5407a4e6315a2663bbdb908986a8e982805b7b82f37
-```
-
-Copy k8s config file from `/etc/kubernetes/admin.conf` to your local `$HOME/.kube` folder. This can be done with SSH in case you'd like to access k8s cluster from other machine:
-```bash
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 Note the following lines reported by `kubeadm init` command:
