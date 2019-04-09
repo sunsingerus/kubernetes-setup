@@ -1,17 +1,20 @@
 # Task: Setup Kubernetes
 
+# Prerequisites
+Set of nodes to install Kubernetes on. Virtual Machives will do.
+
 # kubeadm
 
 ## Change hostname OPTIONAL
 We may want to name kubernetes hosts in order to tell them apart from other nodes. In this case, on each k8s node we may want to:
+ 1. Edit `/etc/hostname` and set preferred `hostname`, ex: `kub1`:
 ```bash
 sudo vim /etc/hostname
 ```
-Set hostname, ex: `kub1`
+ 1. Edit `/etc/hosts` and set preferred DNS name, ex: `kub1`:
 ```bash
 sudo vim /etc/hosts
 ```
-Set DNS name, ex: `kub1`
 
 ## Install k8s on each node to be used for k8s
 
