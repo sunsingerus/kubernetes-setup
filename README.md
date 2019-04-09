@@ -36,10 +36,30 @@ sudo bash -c "echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' >> /et
 sudo apt update
 ```
 
-Install k8s
+**Install k8s:**
+Install `Docker` to run containers:
 ```bash
-sudo apt install -y docker.io # install docker container runtine
-sudo apt install -y kubelet kubeadm kubernetes-cni # install k8s components
+sudo apt install -y docker.io # install docker container runtime
+
+```
+Install k8s components. This step may be different in case of k8s version you'd like to have
+ - Latest version
+```bash
+sudo apt install -y kubernetes-cni kubectl kubelet kubeadm # install k8s components
+```
+ - Specific version, say `1.10.x`
+```bash
+sudo apt install -y kubernetes-cni=0.6.0-00
+sudo apt install -y kubectl=1.10.0-00
+sudo apt install -y kubelet=1.10.0-00
+sudo apt install -y kubeadm=1.10.0-00
+```
+ - Specific version, say `1.11.x`
+```bash
+sudo apt install -y kubernetes-cni=0.6.0-00
+sudo apt install -y kubectl=1.11.0-00
+sudo apt install -y kubelet=1.11.0-00
+sudo apt install -y kubeadm=1.11.0-00
 ```
 
 ### CentOS
@@ -71,6 +91,8 @@ yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 systemctl enable --now kubelet
 ```
 
+END OF CentOS setup, continue.
+
 ## Setup k8s
 Kubernetes requires to have swap turned off, so let's specify this
 ```bash
@@ -92,10 +114,17 @@ sudo reboot
 
 ## Setup k8s
 
-On a Master node init kubernetes cluster:
+On a Master node init kubernetes cluster with default settings as:
 ```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
+Or, in case you'd like to setup specific Kubernetes version or have issues with preflight system versification:
+```bash
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=1.10.0 
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=1.10.0 --ignore-preflight-errors=SystemVerification
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=SystemVerification
+```
+
 This command may take a while to complete. In case of success, we'll see something like:
 
 ```text
