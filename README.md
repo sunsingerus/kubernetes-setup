@@ -1,3 +1,7 @@
+
+[Setup with kubeadm](#kubeadm)
+[Setup with KOPS](#KOPS)
+
 # Task: Setup Kubernetes
 
 # Prerequisites
