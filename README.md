@@ -1,8 +1,8 @@
-
- - [Setup with kubeadm](#kubeadm)
- - [Setup with KOPS](#KOPS)
-
 # Task: Setup Kubernetes
+
+Table of contents:
+ 1. [Setup with kubeadm](#kubeadm)
+ 1. [Setup with KOPS](#KOPS)
 
 # Prerequisites
 Set of nodes to install Kubernetes on. Virtual Machives will do.
@@ -304,23 +304,21 @@ chmod +x ./kops
 mv kops ~/bin/kops
 ```
 
-KOPS store state of the cluster it manages in it own storage. We have two options where to keep cluster state:
+`kops` store state of the cluster it manages in its own storage. We have two options where to keep cluster state:
  - either locally (in files) or 
  - in S3 storage.
 
-In case of usgin S3 stroage to keep cluster state, it is importnant to setup S3 permissions to control access to the S3 bucket.
+In case of S3 stroage, it is importnant to setup S3 permissions to control access to the S3 bucket.
 
-Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. 
+Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool:
 ```bash
-aws s3api create-bucket \
-    --bucket altinity-kops-state-store \
-    --region us-east-1
+aws s3api create-bucket --bucket altinity-kops-state-store --region us-east-1
 ```
-Specify bucket to be used as kops store to kops:
+Specify bucket to be used as storage to `kops`:
 ```bash
 export KOPS_STATE_STORE=s3://altinity-kops-state-store
 ```
-and then kops will use this location by default
+and then `kops` will use this S3 bucket as default storage.
 
 Specify and export `AWS_PROFILE` env var which references section in `~/.aws/credentials` file with `aws_access_key_id` and `aws_secret_access_key`. Example of the section:
 ```ini
@@ -328,13 +326,13 @@ Specify and export `AWS_PROFILE` env var which references section in `~/.aws/cre
 aws_access_key_id = XXX
 aws_secret_access_key = YYY
 ```
-So in our case `AWS_PROFILE` env var would point to `altinity` and we have the whole statement as:
+So in our case `AWS_PROFILE` env var would point to `altinity` section and we have the whole statement as:
 ```bash
 export AWS_PROFILE=altinity
 ```
 Now, we are ready to manage clusters!
 
-More docs om how to setup profile and users: [https://github.com/kubernetes/kops/blob/master/docs/aws.md](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
+More docs on how to setup profile and users: [https://github.com/kubernetes/kops/blob/master/docs/aws.md](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
 
 ## Configure DNS
 If you are using Kops 1.6.2 or later, then DNS configuration is optional.
@@ -343,7 +341,7 @@ The only requirement to trigger this is to have the cluster name end with `.k8s.
 
 For test run it is sufficient to have `.k8s.local` domain.
 
-Otherwise [setup NS configuration](https://github.com/kubernetes/kops/blob/master/docs/aws.md#configure-dns)
+Otherwise [setup DNS configuration](https://github.com/kubernetes/kops/blob/master/docs/aws.md#configure-dns)
 
 ## Manage clusters
 
