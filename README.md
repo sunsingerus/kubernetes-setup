@@ -299,9 +299,9 @@ probably reboot
 
 Download `kops`
 ```bash
-wget https://github.com/kubernetes/kops/releases/download/1.10.0/kops-linux-amd64
-chmod +x kops-linux-amd64
-mv kops-linux-amd64 ~/bin/kops
+curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+chmod +x ./kops
+mv kops ~/bin/kops
 ```
 
 KOPS store state of the cluster it manages in it own storage. We have two options where to keep cluster state:
@@ -310,7 +310,13 @@ KOPS store state of the cluster it manages in it own storage. We have two option
 
 In case of usgin S3 stroage to keep cluster state, it is importnant to setup S3 permissions to control access to the S3 bucket.
 
-Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. Specify bucket to be used as kops store to kops:
+Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. 
+```bash
+aws s3api create-bucket \
+    --bucket altinity-kops-state-store \
+    --region us-east-1
+```
+Specify bucket to be used as kops store to kops:
 ```bash
 export KOPS_STATE_STORE=s3://altinity-kops-state-store
 ```
@@ -328,7 +334,20 @@ export AWS_PROFILE=altinity
 ```
 Now, we are ready to manage clusters!
 
+More docs om how to setup profile and users: [https://github.com/kubernetes/kops/blob/master/docs/aws.md](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
+
+## Configure DNS
+If you are using Kops 1.6.2 or later, then DNS configuration is optional.
+Instead, a gossip-based cluster can be easily created. 
+The only requirement to trigger this is to have the cluster name end with `.k8s.local`.
+
+For test run it is sufficient to have `.k8s.local` domain.
+
+Otherwise [setup NS configuration](https://github.com/kubernetes/kops/blob/master/docs/aws.md#configure-dns)
+
 ## Manage clusters
+
+For a gossip-based cluster, make sure the name ends with `.k8s.local`
 
 Create cluster:
 ```bash
@@ -342,17 +361,23 @@ Edit cluster:
 ```bash
 kops edit cluster dev.altinity.k8s.local
 ```
-Edit node instance group:
+Edit node instance group - specify node parameters (RAM, CPU, etc):
 ```bash
 kops edit ig --name=dev.altinity.k8s.local nodes
 ```
-Edit your master instance group:
+Edit your master instance group - specify master node parameters (RAM, CPU, etc):
 ```bash
 kops edit ig --name=dev.altinity.k8s.local master-us-east-1a
 ```
-Configure cluster with:
+Apply/update cluster with:
 ```bash
 kops update cluster dev.altinity.k8s.local --yes
+```
+
+The cluster access configuration was written to `~/.kube/config`, so `kubectl` can access new cluster.
+
+```bash
+kubectl get nodes
 ```
 
 ## Delete cluster
