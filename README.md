@@ -385,7 +385,7 @@ kops validate cluster
 
 ssh to master as:
 ```bash
-ssh to the master: ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
+ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
 ```
 We can extract kubeconfig file from master at any time
 
