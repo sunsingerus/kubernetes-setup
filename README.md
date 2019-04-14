@@ -383,12 +383,6 @@ Validate cluster with:
 kops validate cluster
 ```
 
-ssh to master as:
-```bash
-ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
-```
-We can extract kubeconfig file from master at any time
-
 Install addons as described [here](https://github.com/kubernetes/kops/blob/master/docs/addons.md)
 
 ## Delete cluster
