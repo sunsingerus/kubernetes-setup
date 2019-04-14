@@ -307,7 +307,9 @@ mv kops-linux-amd64 ~/bin/kops
 KOPS store state of the cluster it manages in it own storage. We have two options where to keep cluster state:
  - either locally (in files) or 
  - in S3 storage.
+
 In case of usgin S3 stroage to keep cluster state, it is importnant to setup S3 permissions to control access to the S3 bucket.
+
 Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. Specify bucket to be used as kops store to kops:
 ```bash
 export KOPS_STATE_STORE=s3://altinity-kops-state-store
