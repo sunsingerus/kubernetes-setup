@@ -1,6 +1,6 @@
 
-[Setup with kubeadm](#kubeadm)
-[Setup with KOPS](#KOPS)
+ - [Setup with kubeadm](#kubeadm)
+ - [Setup with KOPS](#KOPS)
 
 # Task: Setup Kubernetes
 
@@ -304,42 +304,50 @@ chmod +x kops-linux-amd64
 mv kops-linux-amd64 ~/bin/kops
 ```
 
-
-We can keep cluster state either locally or in S3 storage. It is importnant to setup S3 permissions to control access to the bucket.
-Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. Specify this bucket as kops store:
+KOPS store state of the cluster it manages in it own storage. We have two options where to keep cluster state:
+ - either locally (in files) or 
+ - in S3 storage.
+In case of usgin S3 stroage to keep cluster state, it is importnant to setup S3 permissions to control access to the S3 bucket.
+Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool. Specify bucket to be used as kops store to kops:
 ```bash
 export KOPS_STATE_STORE=s3://altinity-kops-state-store
 ```
 and then kops will use this location by default
 
-Specify and export `AWS_PROFILE` env var which references section in `~/.aws/credentials` file with `aws_access_key_id` and `aws_secret_access_key`
+Specify and export `AWS_PROFILE` env var which references section in `~/.aws/credentials` file with `aws_access_key_id` and `aws_secret_access_key`. Example of the section:
 ```ini
 [altinity]
 aws_access_key_id = XXX
 aws_secret_access_key = YYY
 ```
+So in our case `AWS_PROFILE` env var would point to `altinity` and we have the whole statement as:
+```bash
+export AWS_PROFILE=altinity
+```
+Now, we are ready to manage clusters!
 
+## Manage clusters
+
+Create cluster:
 ```bash
 kops create cluster --zones=us-east-1a dev.altinity.k8s.local
 ```
-list clusters with
+List clusters:
 ```bash
 kops get cluster
 ```
-edit cluster:
+Edit cluster:
 ```bash
 kops edit cluster dev.altinity.k8s.local
 ```
-edit node instance group: 
+Edit node instance group:
 ```bash
 kops edit ig --name=dev.altinity.k8s.local nodes
 ```
-
-edit your master instance group:
+Edit your master instance group:
 ```bash
 kops edit ig --name=dev.altinity.k8s.local master-us-east-1a
 ```
-
 Configure cluster with:
 ```bash
 kops update cluster dev.altinity.k8s.local --yes
