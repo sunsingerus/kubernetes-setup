@@ -378,6 +378,19 @@ The cluster access configuration was written to `~/.kube/config`, so `kubectl` c
 kubectl get nodes
 ```
 
+Validate cluster with:
+```bash
+kops validate cluster
+```
+
+ssh to master as:
+```bash
+ssh to the master: ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
+```
+We can extract kubeconfig file from master at any time
+
+Install addons as described [here](https://github.com/kubernetes/kops/blob/master/docs/addons.md)
+
 ## Delete cluster
 
 ```bash
