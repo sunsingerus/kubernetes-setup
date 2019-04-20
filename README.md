@@ -1,8 +1,9 @@
 # Task: Setup Kubernetes
 
 Table of contents:
- 1. [Setup with kubeadm](#kubeadm)
- 1. [Setup with KOPS](#KOPS)
+1. [Setup with kubeadm](#kubeadm)
+1. [Setup with KOPS](#KOPS)
+1. [KOPS Cheat Sheet](#KOPS-cheat-sheet)
 
 # Prerequisites
 Set of nodes to install Kubernetes on. Virtual Machives will do.
@@ -387,6 +388,17 @@ Install addons as described [here](https://github.com/kubernetes/kops/blob/maste
 
 **Delete cluster**:
 
+```bash
+kops delete cluster dev.altinity.k8s.local --yes
+```
+
+# KOPS Cheat Sheet
+**Create Cluster**:
+```bash
+kops create cluster --zones=us-east-1a dev.altinity.k8s.local
+kops update cluster dev.altinity.k8s.local --yes
+```
+**Delete Cluster**:
 ```bash
 kops delete cluster dev.altinity.k8s.local --yes
 ```
