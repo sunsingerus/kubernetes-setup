@@ -347,7 +347,7 @@ Otherwise [setup DNS configuration](https://github.com/kubernetes/kops/blob/mast
 
 For a gossip-based cluster, make sure the name ends with `.k8s.local`
 
-Create cluster:
+**Create cluster**:
 ```bash
 kops create cluster --zones=us-east-1a dev.altinity.k8s.local
 ```
@@ -367,7 +367,7 @@ Edit your master instance group - specify master node parameters (RAM, CPU, etc)
 ```bash
 kops edit ig --name=dev.altinity.k8s.local master-us-east-1a
 ```
-Apply/update cluster with:
+**Apply/update cluster** with:
 ```bash
 kops update cluster dev.altinity.k8s.local --yes
 ```
@@ -385,7 +385,7 @@ kops validate cluster
 
 Install addons as described [here](https://github.com/kubernetes/kops/blob/master/docs/addons.md)
 
-## Delete cluster
+**Delete cluster**:
 
 ```bash
 kops delete cluster dev.altinity.k8s.local --yes
