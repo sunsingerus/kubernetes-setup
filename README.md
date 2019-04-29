@@ -408,7 +408,7 @@ kops delete cluster dev.altinity.k8s.local --yes
 In case you'd like to remove a node from service use `kubectl drain`. This will safely evict all pods from a node. After drain completed, node can be safely maintained.
 All pods will be gracefully terminated with respect to PodDistributionBudgets.
 Choose node to drain:
-```console
+```text
 kubectl get nodes
 NAME                            STATUS   ROLES    AGE   VERSION
 ip-172-20-34-156.ec2.internal   Ready    master   46d   v1.10.12
@@ -420,7 +420,7 @@ Let it be `ip-172-20-41-19.ec2.internal`
 kubectl drain ip-172-20-41-19.ec2.internal
 ```
 Drain command is clever enough not to delete local data. So you can see the following report in case some pods have loca data on the node:
-```console
+```text
 node/ip-172-20-41-19.ec2.internal cordoned
 error: unable to drain node "ip-172-20-41-19.ec2.internal", aborting command...
 
@@ -429,13 +429,13 @@ There are pending nodes to be drained:
 error: pods with local storage (use --delete-local-data to override): grafana-68cd9ff6c5-jxsxz, prometheus-prometheus-0
 ```
 This is normal, Pods were not terminated and Node is just excluded from scheduling new Pods on it:
-```console
+```text
 kubectl get node
 NAME                            STATUS                     ROLES    AGE   VERSION
 ip-172-20-41-19.ec2.internal    Ready,SchedulingDisabled   node     46d   v1.10.12
 ```
 and no any Pods are evicted from this Node:
-```console
+```text
 kubectl get all -o wide -n replminpv 
 NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE
 pod/chi-83898a64ab-1-0   1/1     Running   0          46d   100.96.2.11   ip-172-20-59-111.ec2.internal
