@@ -393,6 +393,13 @@ Install addons as described [here](https://github.com/kubernetes/kops/blob/maste
 kops delete cluster dev.altinity.k8s.local --yes
 ```
 
+**Create additional instance group**
+```bash
+kops create ig nodes2 --subnet us-east-1a
+kops update cluster dev.altinity.k8s.local
+kops update cluster dev.altinity.k8s.local --yes
+```
+
 # KOPS Cheat Sheet
 **Create Cluster**:
 ```bash
