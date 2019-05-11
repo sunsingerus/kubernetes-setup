@@ -1,4 +1,4 @@
-# Task: Setup Kubernetes
+ Task: Setup Kubernetes
 
 Table of contents:
 1. [Setup with kubeadm](#kubeadm)
@@ -422,6 +422,11 @@ kops create cluster \
 **Delete Cluster**:
 ```bash
 kops delete cluster dev.altinity.k8s.local --yes
+```
+
+**Delete instance group**
+```bash
+kops delete ig --name=dev.altinity.k8s.local nodes --yes
 ```
 
 **SSH into node**
