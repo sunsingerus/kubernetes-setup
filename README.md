@@ -402,9 +402,24 @@ kops update cluster dev.altinity.k8s.local --yes
 
 # KOPS Cheat Sheet
 **Create Cluster**:
+Simple cluster:
 ```bash
-kops create cluster --zones=us-east-1a dev.altinity.k8s.local
-kops update cluster dev.altinity.k8s.local --yes
+kops create cluster --zones=us-east-1a --yes dev.altinity.k8s.local
+```
+Additional options:
+```bash
+kops create cluster \
+    --node-count 3 \
+    --zones us-east-1a,us-east-1b,us-east-1c \
+    --master-zones us-east-1a,us-east-1b,us-east-1c \
+    --node-size t2.medium \
+    --master-size t2.medium \
+    --yes \
+    dev.altinity.k8s.local
+```
+```text
+ * list nodes: kubectl get nodes --show-labels
+ * ssh to the master: ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
 ```
 **Delete Cluster**:
 ```bash
