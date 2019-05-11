@@ -409,11 +409,12 @@ kops create cluster --zones=us-east-1a --yes dev.altinity.k8s.local
 Additional options:
 ```bash
 kops create cluster \
-    --node-count 3 \
     --zones us-east-1a,us-east-1b,us-east-1c \
-    --master-zones us-east-1a,us-east-1b,us-east-1c \
+    --node-count 3 \
     --node-size t2.medium \
-    --master-size t2.medium \
+    --master-zones us-east-1a,us-east-1b,us-east-1c \
+    --master-count 3 \
+    --master-size t2.micro \
     --yes \
     dev.altinity.k8s.local
 ```
