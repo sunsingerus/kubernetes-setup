@@ -417,17 +417,13 @@ kops create cluster \
     --yes \
     dev.altinity.k8s.local
 ```
-```text
- * list nodes: kubectl get nodes --show-labels
- * ssh to the master: ssh -i ~/.ssh/id_rsa admin@api.dev.altinity.k8s.local
-```
+
 **Delete Cluster**:
 ```bash
 kops delete cluster dev.altinity.k8s.local --yes
 ```
 
 **SSH into node**
-get list of nodes
 ```bash
 kubectl get node -o wide
 ```
