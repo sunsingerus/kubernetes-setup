@@ -394,8 +394,19 @@ kops delete cluster dev.altinity.k8s.local --yes
 ```
 
 **Create additional instance group**
+Need to:
+1. Add new subnet
+1. Add ig into subnet
 ```bash
-kops create ig nodes2 --subnet us-east-1a
+# add subnet as
+  - cidr: 172.20.64.0/19
+    name: us-east-1b
+    type: Public
+    zone: us-east-1b
+```
+```bash
+# add ig to subnet
+kops create ig --subnet=us-east-1b nodes3
 kops update cluster dev.altinity.k8s.local
 kops update cluster dev.altinity.k8s.local --yes
 ```
