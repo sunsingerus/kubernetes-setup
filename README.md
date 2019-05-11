@@ -426,6 +426,17 @@ kops create cluster \
 kops delete cluster dev.altinity.k8s.local --yes
 ```
 
+**SSH into node**
+get list of nodes
+```bash
+kubectl get node -o wide
+```
+Take a look into **EXTERNAL IP** column. This IP is accessible with SSH and RSA key. We can directly specify RSA key in case there are many of them or just `ssh admin@1.2.3.4` in case there is only one
+```bash
+ssh -i ~/.ssh/id_rsa admin@1.2.3.4
+```
+Username - `admin@` in this case - depends on guest OS and would be `admin` for debian and `centos` for centos.
+
 # kubectl
 In case you'd like to remove a node from service use `kubectl drain`. This will safely evict all pods from a node. After drain completed, node can be safely maintained.
 All pods will be gracefully terminated with respect to PodDistributionBudgets.
