@@ -518,6 +518,9 @@ eksctl create cluster --name=ekscluster1 --nodes=3 --node-ami=auto --region=us-e
 ```bash
 eksctl get cluster --name=ekscluster1 --region=us-east-1
 ```
+```bash
+eksctl delete cluster --name=ekscluster1 --region=us-east-1
+```
 
 ```bash
 curl --silent --location "https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.4.0/aws-iam-authenticator_0.4.0_$(uname -s)_amd64" -o /tmp/aws-iam-authenticator
