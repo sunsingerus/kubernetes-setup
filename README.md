@@ -506,11 +506,17 @@ eksctl version
 ```console
 [ℹ]  version.Info{BuiltAt:"", GitCommit:"", GitTag:"0.1.33"}
 ```
-
-EKS cluster is specified by `.yaml` file. Let;s download template
+Ok, `eksctl` is available! Now time to get `aws-iam-authenticator`
 ```bash
-wget https://eksworkshop.com/eksctl/launcheks.files/eksworkshop.yml.template
+curl --silent --location "https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.4.0/aws-iam-authenticator_0.4.0_$(uname -s)_amd64" -o /tmp/aws-iam-authenticator
+chmod a+x /tmp/aws-iam-authenticator
+mv /tmp/aws-iam-authenticator ~/bin
 ```
+`~/.kube/config`
+```yaml
+      command: aws-iam-authenticator
+```
+
 
 ```bash
 eksctl create cluster --name=ekscluster1 --nodes=3 --node-ami=auto --region=us-east-1
@@ -522,15 +528,6 @@ eksctl get cluster --name=ekscluster1 --region=us-east-1
 eksctl delete cluster --name=ekscluster1 --region=us-east-1
 ```
 
-```bash
-curl --silent --location "https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.4.0/aws-iam-authenticator_0.4.0_$(uname -s)_amd64" -o /tmp/aws-iam-authenticator
-chmod a+x /tmp/aws-iam-authenticator
-mv /tmp/aws-iam-authenticator ~/bin
-```
-`~/.kube/config`
-```yaml
-      command: aws-iam-authenticator
-```
 ```bash
 kubectl get node
 ```
@@ -548,4 +545,9 @@ source <(eksctl completion bash)
 ```
 ```bash
 eksctl delete cluster --name=ekscluster1
+```
+
+EKS cluster is specified by `.yaml` file. Let;s download template
+```bash
+wget https://eksworkshop.com/eksctl/launcheks.files/eksworkshop.yml.template
 ```
