@@ -534,4 +534,12 @@ ip-192-168-17-77.ec2.internal    Ready    <none>   19m   v1.12.7
 ip-192-168-25-67.ec2.internal    Ready    <none>   19m   v1.12.7
 ip-192-168-40-148.ec2.internal   Ready    <none>   18m   v1.12.7
 ```
+Instance type `m5.large` is used by default
 
+
+```bash
+source <(eksctl completion bash)
+```
+```bash
+eksctl delete cluster --name=ekscluster1
+```
