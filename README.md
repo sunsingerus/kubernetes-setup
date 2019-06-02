@@ -493,3 +493,45 @@ kubectl uncordon ip-172-20-41-19.ec2.internal
 ```
 to return node back to service
 
+# eksctl
+Get `eksctl` binary
+```bash
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+mv -v /tmp/eksctl ~/bin
+```
+Check `eksctl` is availbel
+```bash
+eksctl version
+```
+```console
+[ℹ]  version.Info{BuiltAt:"", GitCommit:"", GitTag:"0.1.33"}
+```
+
+EKS cluster is specified by `.yaml` file. Let;s download template
+```bash
+wget https://eksworkshop.com/eksctl/launcheks.files/eksworkshop.yml.template
+```
+
+```bash
+eksctl create cluster --name=ekscluster1 --nodes=3 --node-ami=auto --region=us-east-1
+```
+
+```bash
+curl --silent --location "https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.4.0/aws-iam-authenticator_0.4.0_$(uname -s)_amd64" -o /tmp/aws-iam-authenticator
+chmod a+x /tmp/aws-iam-authenticator
+mv /tmp/aws-iam-authenticator ~/bin
+```
+`~/.kube/config`
+```yaml
+      command: aws-iam-authenticator
+```
+```bash
+kubectl get node
+```
+```console
+NAME                             STATUS   ROLES    AGE   VERSION
+ip-192-168-17-77.ec2.internal    Ready    <none>   19m   v1.12.7
+ip-192-168-25-67.ec2.internal    Ready    <none>   19m   v1.12.7
+ip-192-168-40-148.ec2.internal   Ready    <none>   18m   v1.12.7
+```
+
