@@ -543,11 +543,7 @@ Instance type `m5.large` is used by default
 ```bash
 source <(eksctl completion bash)
 ```
-```bash
-eksctl delete cluster --name=ekscluster1
-```
-
-EKS cluster is specified by `.yaml` file. Let;s download template
+EKS cluster is specified by `.yaml` file. Let's download template
 ```bash
 wget https://eksworkshop.com/eksctl/launcheks.files/eksworkshop.yml.template
 ```
