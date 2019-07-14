@@ -310,7 +310,7 @@ mv kops ~/bin/kops
  - either locally (in files) or 
  - in S3 storage.
 
-In case of S3 stroage, it is importnant to setup S3 permissions to control access to the S3 bucket.
+In case of S3 stroage, it is important to setup S3 permissions to control access to the S3 bucket.
 
 Let’s use `altinity-kops-state-store` as the S3 bucket name. Create this bucket either in GUI or with CLI tool:
 ```bash
@@ -332,6 +332,16 @@ So in our case `AWS_PROFILE` env var would point to `altinity` section and we ha
 ```bash
 export AWS_PROFILE=altinity
 ```
+
+**Sidenote**
+If you don't have access keys, you can create them from the AWS Management Console
+1. Choose **IAM** in AWS services
+1. Choose **Users** in navigation panel
+1. Choose the name of the user whose access keys you want to create
+1. Choose **Security credentials** tab
+1. Choose **Create access key** button
+1. Copy or download access keys to be used in profile
+
 Now, we are ready to manage clusters!
 
 More docs on how to setup profile and users: [https://github.com/kubernetes/kops/blob/master/docs/aws.md](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
