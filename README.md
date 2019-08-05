@@ -546,15 +546,14 @@ Advanced cluster management options:
 
 ```bash
 eksctl create cluster \
-   --name testcluster \
-   --version 1.12 \
-   --nodegroup-name standard-workers \
-   --node-type t3.medium \
-   --nodes 3 \
-   --nodes-min 1 \
-   --nodes-max 4 \
-   --region us-west-2 \
-   --node-ami auto
+    --name testcluster \
+    --version 1.12 \
+    --region us-west-2 \
+    --node-type t3.medium \
+    --nodes 3 \
+    --nodes-min 1 \
+    --nodes-max 4 \
+    --node-ami auto
 ```
 ```bash
 eksctl get cluster --name=testcluster --region=us-west-2
@@ -563,6 +562,10 @@ eksctl get cluster --name=testcluster --region=us-west-2
 eksctl delete cluster --name=testcluster --region=us-west-2
 ```
 
+For all available options see:
+```bash
+eksctl create cluster --help
+```
 ```bash
 kubectl get node
 ```
@@ -573,7 +576,21 @@ ip-192-168-25-67.ec2.internal    Ready    <none>   19m   v1.12.7
 ip-192-168-40-148.ec2.internal   Ready    <none>   18m   v1.12.7
 ```
 
-Instance type `m5.large` is used by default. Instance type can be specified as `--node-type t3.medium` param for `eksctl create cluster` command
+Amazon EKS worker nodes run in your AWS account and connect to your cluster's control plane via the API server endpoint and a certificate file that is created for your cluster. 
+Instance type `m5.large` is used by default for worker nodes. Instance type can be specified as `--node-type t3.medium` param for `eksctl create cluster` command.
+A special [Worker group](https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html) used to launch worker nodes can be created with:
+```bash
+eksctl create nodegroup \
+    --cluster testcluster \
+    --version auto \
+    --name testcluster-workers \
+    --node-type t3.medium \
+    --node-ami auto \
+    --nodes 3 \
+    --nodes-min 1 \
+    --nodes-max 4
+```
+
 
 
 ```bash
