@@ -5,6 +5,7 @@ Table of contents:
 1. [Setup with KOPS](#KOPS)
 1. [KOPS Cheat Sheet](#KOPS-cheat-sheet)
 1. [kubectl](#kubectl)
+1. [EKS](#EKS)
 
 # Prerequisites
 Set of nodes to install Kubernetes on. Virtual Machives will do.
@@ -503,13 +504,15 @@ kubectl uncordon ip-172-20-41-19.ec2.internal
 ```
 to return node back to service
 
+# EKS
+
 # eksctl
 Get `eksctl` binary
 ```bash
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 mv -v /tmp/eksctl ~/bin
 ```
-Check `eksctl` is availbel
+Check `eksctl` is available
 ```bash
 eksctl version
 ```
@@ -522,12 +525,13 @@ curl --silent --location "https://github.com/kubernetes-sigs/aws-iam-authenticat
 chmod a+x /tmp/aws-iam-authenticator
 mv /tmp/aws-iam-authenticator ~/bin
 ```
-`~/.kube/config`
+
+Ensure `command` in `~/.kube/config` is specified as:
 ```yaml
       command: aws-iam-authenticator
 ```
 
-
+Simple cluster management
 ```bash
 eksctl create cluster --name=ekscluster1 --nodes=3 --node-ami=auto --region=us-east-1
 ```
@@ -536,6 +540,27 @@ eksctl get cluster --name=ekscluster1 --region=us-east-1
 ```
 ```bash
 eksctl delete cluster --name=ekscluster1 --region=us-east-1
+```
+
+Advanced cluster management options:
+
+```bash
+eksctl create cluster \
+   --name testcluster \
+   --version 1.12 \
+   --nodegroup-name standard-workers \
+   --node-type t3.medium \
+   --nodes 3 \
+   --nodes-min 1 \
+   --nodes-max 4 \
+   --region us-west-2 \
+   --node-ami auto
+```
+```bash
+eksctl get cluster --name=testcluster --region=us-west-2
+```
+```bash
+eksctl delete cluster --name=testcluster --region=us-west-2
 ```
 
 ```bash
@@ -547,7 +572,8 @@ ip-192-168-17-77.ec2.internal    Ready    <none>   19m   v1.12.7
 ip-192-168-25-67.ec2.internal    Ready    <none>   19m   v1.12.7
 ip-192-168-40-148.ec2.internal   Ready    <none>   18m   v1.12.7
 ```
-Instance type `m5.large` is used by default
+
+Instance type `m5.large` is used by default. Instance type can be specified as `--node-type t3.medium` param for `eksctl create cluster` command
 
 
 ```bash
@@ -557,3 +583,4 @@ EKS cluster is specified by `.yaml` file. Let's download template
 ```bash
 wget https://eksworkshop.com/eksctl/launcheks.files/eksworkshop.yml.template
 ```
+
