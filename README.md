@@ -431,6 +431,7 @@ kops create cluster --zones=us-east-1a --yes dev.altinity.k8s.local
 Additional options:
 ```bash
 kops create cluster \
+    --kubernetes-version 1.12.6 \
     --zones us-east-1a,us-east-1b,us-east-1c \
     --node-count 3 \
     --node-size t2.medium \
