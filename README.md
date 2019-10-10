@@ -445,6 +445,24 @@ kops create cluster \
     --yes \
     dev.altinity.k8s.local
 ```
+even more options:
+```bash
+kops create cluster \
+    --name dev.altinity.k8s.local \
+    --cloud aws \
+    --master-size m4.large \
+    --master-zones=us-east-1b,us-east-1c,us-east-1d \
+    --node-size m4.xlarge \
+    --zones=us-east-1a,us-east-1b,us-east-1c,us-east-1d,us-east-1e,us-east-1f \
+    --node-count=3 \
+    --kubernetes-version=1.11.6 \
+    --vpc=vpc-1234567\
+    --network-cidr=10.0.0.0/16 \
+    --networking=flannel \
+    --authorization=RBAC \
+    --ssh-public-key="~/.ssh/kube_aws_rsa.pub" \
+    --yes
+```
 
 **Delete Cluster**:
 ```bash
