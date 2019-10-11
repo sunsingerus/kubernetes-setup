@@ -484,12 +484,14 @@ Find `kubernetesVersion`, and let' change it to, say
 ```yaml
   kubernetesVersion: 1.12.10
 ```
+
 2. Now we can take a look on changes planned to be made as: `kops update cluster dev.altinity.k8s.local`
 and apply changes on cluster proporties as:
 ```bash
 kops update cluster dev1.altinity.k8s.local --yes
 ```
 At this point we have cluster's specification updated, but we also need to run updates on each node(s) as well.
+
 3. Take a look on what nodes has to be updated as `kops rolling-update cluster dev.altinity.k8s.local`
 We'll see something like :
 ```console
