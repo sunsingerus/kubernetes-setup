@@ -428,6 +428,9 @@ Simple cluster:
 ```bash
 kops create cluster --zones=us-east-1a --yes dev.altinity.k8s.local
 ```
+```bash
+kubectl taint nodes --all node-role.kubernetes.io/master-
+```
 Specify Kubernetes version:
 ```bash
 kops create cluster --kubernetes-version 1.12.6 --cloud=aws --zones=us-east-1a --yes dev.altinity.k8s.local
